@@ -1,0 +1,19 @@
+# -*- mode: ruby -*-
+# vi: set ft=ruby :
+
+VAGRANTFILE_API_VERSION = "2"
+
+Vagrant.configure(VAGRANTFILE_API_VERSION) do |config|
+  config.vm.box = "kensykora/windows_2012_r2_standard"
+  # config.vm.network "forwarded_port", guest: 80, host: 8080
+  config.vm.communicator = "winrm"
+  config.vm.provider "virtualbox" do |vb|
+     vb.gui = true
+     vb.memory = "1024"
+     vb.cpus = 1
+     vb.customize ['modifyvm', :id, '--clipboard', 'bidirectional']
+  end
+  config.vm.synced_folder "~", "/vagrant"
+  config.vm.provision :shell, :path => "setup-chocolatey.cmd"
+  config.vm.provision :shell, :path => "install-apps.cmd"
+end
